@@ -4,47 +4,88 @@
     <meta charset="UTF-8">
     <title>Score & Grade Report</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-        body { background: #F5F6F7; }
-        .main-title { color: #2F4718; font-weight: 800; font-size: 2rem; }
-        .table thead { background-color: #415728 !important; color: #fff; font-weight: bold; }
-        .btn-custom-green { background-color: #415728; color: #fff; }
-        .btn-custom-green:hover { background-color: #2c3d1c; color: #fff; }
-        .table td { vertical-align: middle; }
-        .action-icons a { font-size: 1.1rem; text-decoration: none; margin-right: 10px; }
+        :root {
+            --edu-purple: #5E35B1;
+            --edu-purple-dark: #45258A;
+            --edu-yellow: #FCE082;
+            --edu-bg-light: #F5F6F7;
+            --edu-bg-dark: #1E1E1E;
+            --edu-text-light: #ffffff;
+            --edu-text-dark: #212121;
+        }
+        body {
+            background-color: var(--edu-bg-light);
+            transition: background .3s, color .3s;
+        }
+        body.dark {
+            background-color: var(--edu-bg-dark);
+            color: var(--edu-text-light);
+        }
+        .navbar-edu {
+            background-color: var(--edu-purple);
+        }
+        .toggle-dark {
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 1.2rem;
+        }
+        .main-title {
+            color: var(--edu-purple-dark);
+            font-weight: 800;
+        }
+        body.dark .main-title {
+            color: var(--edu-yellow);
+        }
+        .btn-edu {
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+        }
+        .table thead {
+            background-color: var(--edu-purple-dark);
+            color: white;
+        }
+        body.dark .table thead {
+            background-color: #6a4cd3;
+        }
+        .table-bordered td, .table-bordered th {
+            border-color: #bbb;
+        }
+        body.dark .table {
+            color: var(--edu-text-light);
+        }
+        .badge {
+            font-size: 1rem;
+        }
     </style>
 </head>
 
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-dark" style="background-color:#415728;">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="/">🏫 Student Information System</a>
-    </div>
+<nav class="navbar navbar-edu navbar-dark px-3">
+    <a class="navbar-brand fw-bold" href="/">🎓 EduSIS</a>
+    <button id="darkToggle" class="toggle-dark">🌙</button>
 </nav>
 
-<!-- Container -->
 <div class="container mt-5">
-    <h2 class="text-center main-title mb-4">Student Information</h2>
+    <h2 class="text-center main-title mb-4">📊 Score & Grade Report</h2>
 
-    <!-- Action Buttons -->
     <div class="mb-3 d-flex gap-2">
-        <a href="/student/add" class="btn btn-success fw-semibold">+ Student</a>
-        <a href="/score/add" class="btn btn-primary fw-semibold">+ Score</a>
-        <a href="/subject/add" class="btn btn-warning fw-semibold">+ Subject</a>
+        <a href="/student/add" class="btn btn-success btn-edu">+ Student</a>
+        <a href="/score/add" class="btn btn-primary btn-edu">+ Score</a>
+        <a href="/subject/add" class="btn btn-warning btn-edu">+ Subject</a>
     </div>
 
-    <!-- Table -->
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-bordered align-middle">
             <thead class="text-center">
             <tr>
-                <th>Id</th>
-                <th>Student Id</th>
-                <th>Student Name</th>
-                <th>Subject Name</th>
+                <th>#</th>
+                <th>Student Code</th>
+                <th>Name</th>
+                <th>Subject</th>
                 <th>Score 1</th>
                 <th>Score 2</th>
                 <th>Credit</th>
@@ -55,33 +96,27 @@
 
             <tbody>
             <tr th:each="sc, i : ${scores}">
-                <td th:text="${i.index + 1}" class="text-center"></td>
-
-                <td th:text="${sc.student.code}" class="text-center fw-semibold"></td>
+                <td th:text="${i.index + 1}" class="text-center fw-semibold"></td>
+                <td th:text="${sc.student.code}" class="text-center"></td>
                 <td th:text="${sc.student.name}" class="fw-semibold"></td>
-
                 <td th:text="${sc.subject.subjectName}" class="fw-semibold text-center"></td>
-
                 <td th:text="${sc.score1}" class="text-center"></td>
                 <td th:text="${sc.score2}" class="text-center"></td>
-
                 <td th:text="${sc.subject.credit}" class="text-center fw-semibold"></td>
 
-                <!-- Grade with colored label -->
                 <td class="text-center">
                     <span th:switch="${sc.grade}">
-                        <span th:case="'A'" class="badge bg-success fs-6" th:text="${sc.grade}"></span>
-                        <span th:case="'B'" class="badge bg-primary fs-6" th:text="${sc.grade}"></span>
-                        <span th:case="'D'" class="badge bg-warning text-dark fs-6" th:text="${sc.grade}"></span>
-                        <span th:case="*" class="badge bg-danger fs-6" th:text="${sc.grade}"></span>
+                        <span th:case="'A'" class="badge bg-success" th:text="${sc.grade}"></span>
+                        <span th:case="'B'" class="badge bg-primary" th:text="${sc.grade}"></span>
+                        <span th:case="'D'" class="badge bg-warning text-dark" th:text="${sc.grade}"></span>
+                        <span th:case="*" class="badge bg-danger" th:text="${sc.grade}"></span>
                     </span>
                 </td>
 
-                <td class="text-center action-icons">
-                    <a th:href="@{'/score/edit/' + ${sc.id}}" title="Edit">✏</a>
-                    <a th:href="@{'/score/delete/' + ${sc.id}}"
-                       onclick="return confirm('Confirm delete score?');"
-                       title="Delete" style="color:#D9534F;">🗑</a>
+                <td class="text-center">
+                    <a th:href="@{'/score/edit/' + ${sc.id}}" class="btn btn-sm btn-outline-primary">✏</a>
+                    <a th:href="@{'/score/delete/' + ${sc.id}}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Confirm delete?');">🗑</a>
                 </td>
             </tr>
 
@@ -93,6 +128,16 @@
         </table>
     </div>
 </div>
+
+<script>
+    const toggle = document.getElementById("darkToggle");
+    const body = document.body;
+    if(localStorage.getItem("sis-theme") === "dark"){ body.classList.add("dark"); }
+    toggle.addEventListener("click", () => {
+        body.classList.toggle("dark");
+        localStorage.setItem("sis-theme", body.classList.contains("dark") ? "dark" : "light");
+    });
+</script>
 
 </body>
 </html>
