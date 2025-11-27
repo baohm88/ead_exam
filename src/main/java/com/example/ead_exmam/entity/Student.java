@@ -12,11 +12,14 @@ public class Student {
     @Column(name="student_id")
     private Integer id;
 
-    @Column(name="student_code", nullable=false)
+    @Column(name="student_code", nullable=false, unique=true)
     private String code;
 
     @Column(name="full_name", nullable=false)
     private String name;
 
     private String address;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 }

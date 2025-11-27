@@ -12,7 +12,11 @@ public class Subject {
     @Column(name="subject_id")
     private Integer id;
 
+    @Column(name="subject_code", unique = true, nullable = false)
     private String subjectCode;
     private String subjectName;
     private Integer credit;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 }

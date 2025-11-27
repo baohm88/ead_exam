@@ -23,9 +23,15 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Student s){
-        service.save(s);
-        return "redirect:/student/list";
+    public String save(@ModelAttribute Student s, Model m){
+        try {
+            service.save(s);
+            return "redirect:/student/list";
+        } catch (RuntimeException ex){
+            m.addAttribute("student", s);
+            m.addAttribute("error", ex.getMessage());
+            return "add-student";
+        }
     }
 
     @GetMapping("/list")

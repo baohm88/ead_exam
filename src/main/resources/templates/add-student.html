@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
@@ -8,12 +9,13 @@
 <body class="bg-light">
 <nav class="navbar navbar-dark" style="background-color:#003A6E;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">⬅ Back</a>
+        <a class="navbar-brand" href="/student/list">⬅ Back</a>
     </div>
 </nav>
 
 <div class="container mt-5">
     <h2 class="fw-bold" style="color:#E86F00;">Add New Student</h2>
+    <div th:if="${error}" class="alert alert-danger my-3" th:text="${error}"></div>
     <form th:action="@{/student/save}" method="post" th:object="${student}" class="mt-4">
 
         <div class="mb-3">
@@ -28,7 +30,7 @@
 
         <div class="mb-3">
             <label class="form-label">Address</label>
-            <input th:field="*{address}" type="text" class="form-control">
+            <textarea th:field="*{address}" class="form-control" rows="3"></textarea>
         </div>
 
         <button type="submit" class="btn text-white" style="background-color:#003A6E;">Save</button>

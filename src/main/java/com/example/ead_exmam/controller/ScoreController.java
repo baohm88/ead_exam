@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/score")
@@ -32,5 +34,12 @@ public class ScoreController {
     public String save(@ModelAttribute StudentScore score){
         scoreRepo.save(score);
         return "redirect:/";
+    }
+
+    @GetMapping("/list")
+    public String list(Model model){
+        List<StudentScore> scores = scoreRepo.findAll();
+        model.addAttribute("scores", scores);
+        return "score-list";
     }
 }

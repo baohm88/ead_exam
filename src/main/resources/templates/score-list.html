@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Score & Grade Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-$END$
+
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark" style="background-color:#003A6E;">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/">🏫 Student Information System</a>
+        <a class="btn btn-warning text-dark" href="/score/add">➕ Add Score</a>
+    </div>
+</nav>
+
+<!-- Container -->
+<div class="container mt-5">
+
+    <h2 class="fw-bold text-center" style="color:#E86F00;">📊 Score & Grade Report</h2>
+
+    <!-- Table -->
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+            <tr>
+                <th>#</th>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Score 1 (30%)</th>
+                <th>Score 2 (70%)</th>
+                <th>Grade</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="sc, i : ${scores}">
+                <td th:text="${i.index + 1}" class="text-center"></td>
+                <td>
+                    <strong th:text="${sc.student.name}"></strong><br>
+                    <small class="text-muted" th:text="'Code: ' + ${sc.student.code}"></small>
+                </td>
+                <td>
+                    <strong th:text="${sc.subject.subjectName}"></strong><br>
+                    <small class="text-muted" th:text="'Code: ' + ${sc.subject.subjectCode}"></small>
+                </td>
+                <td class="text-center" th:text="${sc.score1}"></td>
+                <td class="text-center" th:text="${sc.score2}"></td>
+
+                <!-- Grade Using Switch -->
+                <td class="text-center">
+                    <span th:switch="${sc.grade}">
+                        <span th:case="'A'" class="badge fs-6 bg-success" th:text="${sc.grade}"></span>
+                        <span th:case="'B'" class="badge fs-6 bg-primary" th:text="${sc.grade}"></span>
+                        <span th:case="'D'" class="badge fs-6 bg-warning text-dark" th:text="${sc.grade}"></span>
+                        <span th:case="*" class="badge fs-6 bg-danger" th:text="${sc.grade}"></span>
+                    </span>
+                </td>
+
+                <!-- Actions -->
+                <td class="text-center">
+                    <a th:href="@{'/score/edit/' + ${sc.id}}" class="btn btn-sm btn-outline-primary">✏ Edit</a>
+                    <a th:href="@{'/score/delete/' + ${sc.id}}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Are you sure you want to delete this score?');">
+                        🗑 Delete
+                    </a>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(scores)}">
+                <td colspan="7" class="text-center text-muted">No scores found.</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
 </body>
 </html>
