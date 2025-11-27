@@ -1,7 +1,7 @@
 package com.example.ead_exmam.controller;
 
 import com.example.ead_exmam.entity.Subject;
-import com.example.ead_exmam.repository.SubjectRepository;
+import com.example.ead_exmam.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/subject")
 public class SubjectController {
 
-    private final SubjectRepository subjectRepository;
+    private final SubjectService service;
 
     @GetMapping("/add")
     public String addForm(Model model){
@@ -23,14 +23,20 @@ public class SubjectController {
     }
 
     @PostMapping("/save")
-    public String save(Subject subject){
-        subjectRepository.save(subject);
-        return "redirect:/subject/list";
+    public String save(Subject subject, Model model){
+        try {
+            service.save(subject);
+            return "redirect:/subject/list";
+        } catch (RuntimeException ex){
+            model.addAttribute("subject", subject);
+            model.addAttribute("error", ex.getMessage());
+            return "add-subject";
+        }
     }
 
     @GetMapping("/list")
     public String list(Model model){
-        model.addAttribute("subjects", subjectRepository.findAll());
+        model.addAttribute("subjects", service.list());
         return "subjects";
     }
 }
